@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello RecipController!{% endblock %}
+
+{% block body %}
+   <ul>
+       {% for recipe in recipes %}
+           <li>
+               <a href="{{ path('app_show_recipe', {'id': recipe.id, 'slug': recipe.slug}) }}">{{ recipe.title }}</a>
+           </li>
+       {% endfor %}
+   </ul>
+{% endblock %}
