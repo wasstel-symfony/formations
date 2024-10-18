@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% block title "Recette - "~ recipe.title %}
+{% block body %}
+    <div class="container">
+        <h2 class="font-extrabold text-3xl">{{ recipe.title }}</h2>
+        <div>
+            {{ form(form) }}
+        </div>
+    </div>
+{% endblock %}
+
+
+
+
+
