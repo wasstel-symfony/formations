@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello MapController!{% endblock %}
+
+{% block body %}
+    <div class="my-6">
+        {{ ux_map(map, { style: 'height: 1080px', id: 'events-map', class: 'mb-3' }) }}
+    </div>
+{% endblock %}

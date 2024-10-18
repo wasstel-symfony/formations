@@ -32,7 +32,6 @@ class RecipeController extends AbstractController
 //        dd($repository->findTotalDuration());
         $recipes = $repository->findAll();
         return $this->render('recipe/index.html.twig', [
-            'controller_name' => 'RecipeController',
             'recipes' => $recipes,
         ]);
     }
@@ -50,9 +49,15 @@ class RecipeController extends AbstractController
     }
 
     #[Route('/recipe/{id}/edit', name: 'app_recipe_edit')]
-    public function edit(Request $request, RecipeRepository $repository, Recipe $recipe): Response
+    public function edit(Request $request, EntityManagerInterface $em, Recipe $recipe): Response
     {
         $form = $this->createForm(RecipeType::class, $recipe);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+            $this->addFlash('success', 'Recipe updated.');
+            return $this->redirectToRoute('app_recipe');
+        }
         return $this->render('recipe/edit.html.twig', [
             'recipe' => $recipe,
             'form' => $form,

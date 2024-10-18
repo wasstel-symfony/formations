@@ -9,6 +9,7 @@ use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[ORM\Entity(repositoryClass: RecipeRepository::class)]
 #[Broadcast]
+
 class Recipe
 {
     #[ORM\Id]
