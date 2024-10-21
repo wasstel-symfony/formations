@@ -3,11 +3,46 @@
 {% block title %}Hello RecipController!{% endblock %}
 
 {% block body %}
-   <ul>
-       {% for recipe in recipes %}
-           <li>
-               <a href="{{ path('app_show_recipe', {'id': recipe.id, 'slug': recipe.slug}) }}">{{ recipe.title }}</a>
-           </li>
-       {% endfor %}
-   </ul>
+    <div class="d-flex">
+        <a href="{{ path('admin_recipe_create') }}" role="button" class="btn btn-danger">Create</a>
+    </div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Titre</th>
+            <th scope="col">Actions</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        {% for recipe in recipes %}
+            <tr class="table-active">
+                <th scope="row">{{ recipe.title }}</th>
+                <td>
+                   <div class="d-flex gap-1">
+{#                       <a href="{{ path('admin_recipe_index', {'id': recipe.id, 'slug': recipe.slug}) }}" role="button" class="btn btn-primary">Show</a>#}
+                       <a href="{{ path('admin_recipe_edit', {'id': recipe.id}) }}" role="button" class="btn btn-primary">Update</a>
+                       <form action="{{ path('admin_recipe_delete', {'id': recipe.id}) }}" method="post">
+                           <input type="hidden" name="_method" value="delete"/>
+                           <button  type="submit" class="btn btn-danger">Delete</button>
+                       </form>
+                   </div>
+
+                </td>
+            </tr>
+{#            <li>#}
+{#                <a href="{{ path('app_show_recipe', {'id': recipe.id, 'slug': recipe.slug}) }}">{{ recipe.title }}</a>#}
+{#            </li>#}
+        {% endfor %}
+
+
+        </tbody>
+    </table>
+{#   <ul>#}
+{#       {% for recipe in recipes %}#}
+{#           <li>#}
+{#               <a href="{{ path('app_show_recipe', {'id': recipe.id, 'slug': recipe.slug}) }}">{{ recipe.title }}</a>#}
+{#           </li>#}
+{#       {% endfor %}#}
+{#   </ul>#}
 {% endblock %}
