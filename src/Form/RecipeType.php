@@ -21,6 +21,9 @@ use Symfony\Component\Validator\Constraints\Sequentially;
 
 class RecipeType extends AbstractType
 {
+    public function __construct(private FormListenerFactory $factory)
+    {
+    }
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -46,34 +49,11 @@ class RecipeType extends AbstractType
                 ]
             )
             ->add('Save', SubmitType::class)
-            ->addEventListener(FormEvents::PRE_SUBMIT, $this->autoSlug(...))
-            ->addEventListener(FormEvents::POST_SUBMIT, $this->attachTimestamps(...))
+            ->addEventListener(FormEvents::PRE_SUBMIT, $this->factory->autoSlug('title'))
+            ->addEventListener(FormEvents::POST_SUBMIT, $this->factory->timestamps())
         ;
     }
 
-    public function autoSlug(PreSubmitEvent $event): void
-    {
-        $data = $event->getData();
-        if (empty($data['slug'])) {
-            $slug = new AsciiSlugger();
-            $data['slug'] = strtolower($slug->slug($data['title']));
-//            $data['created_at']
-            $event->setData($data);
-        }
-        //dd($event->getData());
-    }
-
-    public function attachTimestamps(PostSubmitEvent $event): void
-    {
-        $data = $event->getData();
-        if (!$data instanceof Recipe) {
-            return;
-        }
-        if (!$data->getId()){
-            $data->setCreatedAt(new \DateTimeImmutable());
-        }
-        $data->setUpdatedAt(new \DateTimeImmutable());
-    }
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([

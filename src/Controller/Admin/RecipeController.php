@@ -10,6 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Requirement\Requirement;
 
 #[Route("admin/recipe", name: "admin_recipe_")]
 class RecipeController extends AbstractController
@@ -29,7 +30,7 @@ class RecipeController extends AbstractController
 //        $entityManager->flush();
 //        dd($repository->findTotalDuration());
         $recipes = $repository->findAll();
-        return $this->render('recipe/index.html.twig', [
+        return $this->render('admin/recipe/index.html.twig', [
             'recipes' => $recipes,
         ]);
     }
@@ -46,7 +47,7 @@ class RecipeController extends AbstractController
 //        ]);
 //    }
 
-    #[Route('/{id}/edit', name: 'edit')]
+    #[Route('/{id}/edit', name: 'edit', requirements: ['id' => Requirement::DIGITS])]
     public function edit(Request $request, EntityManagerInterface $em, Recipe $recipe): Response
     {
         $form = $this->createForm(RecipeType::class, $recipe);
@@ -56,7 +57,7 @@ class RecipeController extends AbstractController
             $this->addFlash('success', 'Recipe updated.');
             return $this->redirectToRoute('admin_recipe_index');
         }
-        return $this->render('recipe/edit.html.twig', [
+        return $this->render('admin/recipe/edit.html.twig', [
             'recipe' => $recipe,
             'form' => $form,
         ]);
@@ -77,18 +78,18 @@ class RecipeController extends AbstractController
             $this->addFlash('success', 'Recipe created.');
             return $this->redirectToRoute('admin_recipe_index');
         }
-        return $this->render('recipe/create.html.twig', [
+        return $this->render('admin/recipe/create.html.twig', [
             'form' => $form,
         ]);
     }
 
-    #[Route('/{id}/delete', name: 'delete', methods: ['DELETE'])]
+    #[Route('/{id}/delete', name: 'delete',  requirements: ['id' => Requirement::DIGITS], methods: ['DELETE'])]
     public function remove(EntityManagerInterface $em, Recipe $recipe): Response
     {
         $em->remove($recipe);
         $em->flush();
         $this->addFlash('success', 'Recipe deleted.');
-        return $this->redirectToRoute('app_recipe');
+        return $this->redirectToRoute('admin_recipe_index');
     }
     
 }
