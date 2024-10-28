@@ -7,12 +7,15 @@ use App\Form\RecipeType;
 use App\Repository\RecipeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route("admin/recipe", name: "admin_recipe_")]
+#[IsGranted("ROLE_ADMIN")]
 class RecipeController extends AbstractController
 {
 
@@ -29,7 +32,7 @@ class RecipeController extends AbstractController
 //        $entityManager->persist($recipe);
 //        $entityManager->flush();
 //        dd($repository->findTotalDuration());
-        $recipes = $repository->findAll();
+        $recipes = $repository->findWithDurationLowerThan(20);
         return $this->render('admin/recipe/index.html.twig', [
             'recipes' => $recipes,
         ]);
@@ -53,6 +56,13 @@ class RecipeController extends AbstractController
         $form = $this->createForm(RecipeType::class, $recipe);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+//            /**
+//             * @var UploadedFile $file
+//             */
+//            $file = $form->get('thumbnailFile')->getData();
+//            $filename = $recipe->getId().'.'.$file->getClientOriginalExtension();
+//            $file->move($this->getParameter('kernel.project_dir').'/public/recipes/images', $filename);
+//            $recipe->setThumbnail($filename);
             $em->flush();
             $this->addFlash('success', 'Recipe updated.');
             return $this->redirectToRoute('admin_recipe_index');

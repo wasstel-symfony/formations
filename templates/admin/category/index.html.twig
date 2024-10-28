@@ -3,39 +3,41 @@
 {% block title %}Hello AdminCategoryController!{% endblock %}
 
 {% block body %}
-    <div class="d-flex">
-        <a href="{{ path('admin_category_create') }}" role="button" class="btn btn-danger">Create</a>
-    </div>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th scope="col">Name</th>
-            <th scope="col">Actions</th>
+    <div class="p-10">
+        <div class="d-flex">
+            <a href="{{ path('admin_category_create') }}" role="button" class="btn btn-danger">Create</a>
+        </div>
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Actions</th>
 
-        </tr>
-        </thead>
-        <tbody>
-        {% for category in categories %}
-            <tr class="table-active">
-                <th scope="row">{{ category.name }}</th>
-                <td>
-                    <div class="d-flex gap-1">
-                        {#                       <a href="{{ path('admin_recipe_index', {'id': recipe.id, 'slug': recipe.slug}) }}" role="button" class="btn btn-primary">Show</a>#}
-                        <a href="{{ path('admin_category_edit', {'id': category.id}) }}" role="button" class="btn btn-primary">Update</a>
-                        <form action="{{ path('admin_category_delete', {'id': category.id}) }}" method="post">
-                            <input type="hidden" name="_method" value="delete"/>
-                            <button  type="submit" class="btn btn-danger">Delete</button>
-                        </form>
-                    </div>
-
-                </td>
             </tr>
-            {#            <li>#}
-            {#                <a href="{{ path('app_show_recipe', {'id': recipe.id, 'slug': recipe.slug}) }}">{{ recipe.title }}</a>#}
-            {#            </li>#}
-        {% endfor %}
+            </thead>
+            <tbody>
+            {% for category in categories %}
+                <tr class="table-active">
+                    <th scope="row">{{ category.name }}</th>
+                    <td>
+                        <div class="d-flex gap-1">
+                            {#                       <a href="{{ path('admin_recipe_index', {'id': recipe.id, 'slug': recipe.slug}) }}" role="button" class="btn btn-primary">Show</a>#}
+                            <a href="{{ path('admin_category_edit', {'id': category.id}) }}" role="button" class="btn btn-primary">Update</a>
+                            <form action="{{ path('admin_category_delete', {'id': category.id}) }}" method="post">
+                                <input type="hidden" name="_method" value="delete"/>
+                                <button  type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        </div>
+
+                    </td>
+                </tr>
+                {#            <li>#}
+                {#                <a href="{{ path('app_show_recipe', {'id': recipe.id, 'slug': recipe.slug}) }}">{{ recipe.title }}</a>#}
+                {#            </li>#}
+            {% endfor %}
 
 
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

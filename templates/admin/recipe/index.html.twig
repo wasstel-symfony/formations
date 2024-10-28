@@ -10,6 +10,7 @@
         <thead>
         <tr>
             <th scope="col">Titre</th>
+            <th scope="col">Category</th>
             <th scope="col">Actions</th>
 
         </tr>
@@ -18,6 +19,7 @@
         {% for recipe in recipes %}
             <tr class="table-active">
                 <th scope="row">{{ recipe.title }}</th>
+                <th scope="row">{{ recipe.category.name | default('') }}</th>
                 <td>
                    <div class="d-flex gap-1">
 {#                       <a href="{{ path('admin_recipe_index', {'id': recipe.id, 'slug': recipe.slug}) }}" role="button" class="btn btn-primary">Show</a>#}

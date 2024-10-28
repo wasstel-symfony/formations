@@ -2,6 +2,7 @@
 {% block title "Recette - "~ recipe.title %}
 {% block body %}
     <div class="container">
+        <img src="{{ vich_uploader_asset(recipe, 'thumbnailFile') }}" height="100" alt="">
         <h2 class="font-extrabold text-3xl">{{ recipe.title }}</h2>
         <div>
             {{ form(form) }}
