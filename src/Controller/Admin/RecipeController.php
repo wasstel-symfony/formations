@@ -5,8 +5,10 @@ namespace App\Controller\Admin;
 use App\Entity\Recipe;
 use App\Form\RecipeType;
 use App\Repository\RecipeRepository;
+use App\Security\Voter\RecipeVoter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,24 +17,17 @@ use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route("admin/recipe", name: "admin_recipe_")]
-#[IsGranted("ROLE_ADMIN")]
+//#[IsGranted("ROLE_ADMIN")]
 class RecipeController extends AbstractController
 {
 
     #[Route('/', name: 'index')]
-    public function index(Request $request, RecipeRepository $repository, EntityManagerInterface $entityManager): Response
+    #[IsGranted(RecipeVoter::LIST)]
+    public function index(RecipeRepository $repository, Security $security): Response
     {
-//        $recipe = new Recipe();
-//        $recipe->setTitle('Gombo soupa');
-//        $recipe->setDuration(30);
-//        $recipe->setContent('Gombo soupa');
-//        $recipe->setCreatedAt(new \DateTimeImmutable('now'));
-//        $recipe->setUpdatedAt(new \DateTimeImmutable('now'));
-//        $recipe->setSlug('gombo-soupa');
-//        $entityManager->persist($recipe);
-//        $entityManager->flush();
-//        dd($repository->findTotalDuration());
-        $recipes = $repository->findWithDurationLowerThan(20);
+        $recipes = $repository->findWithDurationLowerThan(60);
+        $userId = $security->getUser()->getId();
+        $canListAll = $security->isGranted(RecipeVoter::LIST_ALL);
         return $this->render('admin/recipe/index.html.twig', [
             'recipes' => $recipes,
         ]);
@@ -51,6 +46,7 @@ class RecipeController extends AbstractController
 //    }
 
     #[Route('/{id}/edit', name: 'edit', requirements: ['id' => Requirement::DIGITS])]
+    #[IsGranted(RecipeVoter::EDIT)]
     public function edit(Request $request, EntityManagerInterface $em, Recipe $recipe): Response
     {
         $form = $this->createForm(RecipeType::class, $recipe);
@@ -74,6 +70,7 @@ class RecipeController extends AbstractController
     }
 
     #[Route('/create', name: 'create')]
+    #[IsGranted(RecipeVoter::CREATE)]
     public function create(Request $request, EntityManagerInterface $em): Response
     {
         $recipe = new Recipe();
@@ -81,8 +78,6 @@ class RecipeController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-//            $recipe->setCreatedAt(new \DateTimeImmutable());
-//            $recipe->setUpdatedAt(new \DateTimeImmutable());
             $em->persist($recipe);
             $em->flush();
             $this->addFlash('success', 'Recipe created.');
